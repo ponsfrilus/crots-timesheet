@@ -1,6 +1,6 @@
 {
   "title": "crots — CROnos Time Sheet ⌛",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "imports": {
     "@std/cli": "jsr:@std/cli@^0.224.7",
     "@std/io": "jsr:@std/io@^0.224.3"
@@ -14,5 +14,10 @@
     "proseWrap": "preserve",
     "include": ["*.ts"],
     "exclude": ["index.js"]
+  },
+  "compilerOptions": {
+    "types": [
+      "./types.d.ts"
+    ]
   }
 }
