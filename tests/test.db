@@ -1,0 +1,43 @@
+# This file is the Test file for the TS project
+
+
+#
+# WORKING ENTRIES
+#
+
+# Simplest line (no coms)
+2024-01-01 08:30 60 17:30 description
+2024-01-06 08:30 12:05 13:00 17:30 description
+
+2024-02-02 08:30 60 17:40 70 Got an extra of 70 minutes
+2024-02-03 08:30 60 19:00 No extra
+2024-03-04 10:00 60 19:00   No extra but spaces  
+2024-03-05 10:00 60 19:00 55     Extra and Extra spaces
+2023-06-14 07:00 75 19:00 [Télétravail] have a "tag"
+2023-06-14 08:00 60 18:00 [EPFL]🚴 have a "tag" and an emoji
+2023-10-14 08:00 60 18:00 [EPFL]🚌 have a "tag" and an emoji
+2023-11-14 13:00 0 19:00 No pause
+2023-11-14 09:00 45 19:00 [Vacances]
+2023-11-14 09:00 45 19:00 [Maladie]
+2023-11-14 09:00 45 19:00 [EPFL] done this (240), done that (120).
+
+# 
+# Might fail
+#
+
+# Simplest line with tabs should fail
+2024-12-02	08:30	60	17:30		Line with tabs should fail
+
+#
+# FAILING ENTRIES
+#
+
+# Lines not beginning with # or a number should fail
+  2024-12-01  08:30 60  17:30 Too much spaces should fail
+a weird line should fail
+
+  No extra but spaces should fail
+
+# Impossible dates
+2024-12-42 08:30 60 17:30 should fail (no month with 42 days)
+2024-13-01 08:30 60 17:30 should fail (no 13rd month)
