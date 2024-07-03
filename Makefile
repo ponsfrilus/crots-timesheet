@@ -16,8 +16,8 @@ clean:
 
 .PHONY: fmt
 fmt:
+	@echo "Note: use 'deno fmt' to auto fix"
 	deno fmt --check
-	@echo "Use deno fmt"
 
 .PHONY: lint
 lint:
