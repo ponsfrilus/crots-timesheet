@@ -1,4 +1,4 @@
-import { isEmpty, isNumeric, writeJson, roundFloatNumber } from './tools.ts';
+import { isNumeric, roundFloatNumber } from './tools.ts';
 
 export function weekData(settings: Settings): weekData {
   // const wh = Duration.fromObject({ hours: settings.week_hours })
@@ -15,6 +15,7 @@ export function weekData(settings: Settings): weekData {
 }
 
 export const parseDescription = (desc: string) => {
+  if (desc == null) return;
   const original_desc = desc;
 
   const regexEmojis =
@@ -39,7 +40,7 @@ export const parseDescription = (desc: string) => {
 
   desc = desc.replace(regexEmojis, '');
   desc = desc.replace(regexTags, '');
-  let descs = desc.split(',').map((t) => t.trim());
+  const descs = desc.split(',').map((t) => t.trim());
   // TODO: parse time (120)
   return { tags, emojis, descs };
 };
@@ -72,7 +73,7 @@ export const parseLine = (line: string, settings: Settings, debug: boolean): ent
         'breaks': 0,
         'end_time': found[7],
         'extra': parseInt(found[9]) || 0,
-        'description': found[10].trim() || '-',
+        'description': found[10] ? found[10].trim() : '',
         'description_parsed': parseDescription(found[10]),
         'total': 0,
         'balance': 0,
@@ -164,42 +165,42 @@ export const parseLine = (line: string, settings: Settings, debug: boolean): ent
       return entry;
     } else {
       console.error('↳ \x1b[31m⨯\x1b[0m An error occured with the following line:', original_line);
+      return;
     }
   } else if (line == '') {
     if (debug) console.debug(`↳ \x1b[31m⨯\x1b[0m This line is empty`);
-  } else if (line.startsWith('#')) {
+  } else if (line.startsWith('#') || line.startsWith('---')) {
     if (debug) console.debug(`↳ \x1b[31m⨯\x1b[0m This line is a comment`);
   } else {
     console.error('↳ \x1b[31m⨯\x1b[0m The following line is malformed:', original_line);
+    return;
   }
 };
 
-export function summarize(crotsData: Array<entry>, args: object) {
-  const sums: Array<Array<Array<Array<string | number>>>> = [];
-  const sumsByWeek: Array<Array<string[]>> = [];
+export function summarize(crotsData: Array<entry>, _args: object) {
+  const sums: month[][] = [];
+  const sumsByWeek: week[][] = [];
   let yearTotal = 0;
   for (let i = 0; i < crotsData.length; i++) {
-    let dt = DateTime.fromISO(crotsData[i].date);
+    const dt = DateTime.fromISO(crotsData[i].date);
 
-    let year = dt.year;
-    let month = dt.monthLong;
-    let weekNumber = dt.weekNumber;
+    const year = dt.year;
+    const month = dt.monthLong;
+    const weekNumber = dt.weekNumber;
 
-    if (typeof sums[year] === 'undefined') {
-      sums[year]= [];
-      sumsByWeek[year]= [];
-      console.log(`\n# ${year}`);
-    }
-    if (typeof sums[year][month] === 'undefined') {
-      sums[year][month] = [];
-      sums[year][month]['total_minutes'] = 0;
-      console.log(`\n## ${year}-${month}`);
-    }
-    if (typeof sumsByWeek[year][weekNumber] === 'undefined') {
-      sumsByWeek[year][weekNumber] = [];
-      sumsByWeek[year][weekNumber]['total_minutes'] = 0;
-      console.log(`\n### Week #${weekNumber}`);
-    }
+    sums[year] ??= [];
+    // if (!sums[year].length) {
+    //   console.log(`\n# ${year}`);
+    // }
+    sums[year][month] ??= { total_minutes: 0, total_hours: 0 };
+    // if (sums[year][month].total_minutes === 0 && sums[year][month].total_hours === 0) {
+    //   console.log(`\n## ${year}-${month}`);
+    // }
+    sumsByWeek[year] ??= [];
+    sumsByWeek[year][weekNumber] ??= { total_minutes: 0, total_hours: 0 };
+    // if (sumsByWeek[year][weekNumber].total_minutes === 0 && sumsByWeek[year][weekNumber].total_hours === 0) {
+    //   console.log(`\n### Week #${weekNumber}`);
+    // }
 
     yearTotal += crotsData[i].balance ?? 0;
 
@@ -212,11 +213,11 @@ export function summarize(crotsData: Array<entry>, args: object) {
     const printableBalance = ((crotsData[i].balance ?? 0) < 0) ? crotsData[i].balance : '+' + crotsData[i].balance;
 
     const crotsTotal = crotsData[i].total ?? 0;
-    const crotsTotalHours = crotsTotal/60;
+    const crotsTotalHours = crotsTotal / 60;
     const crotsTotalHoursRounded = roundFloatNumber(crotsTotalHours);
-  
+
     console.log(
-      `${crotsData[i].date} ${(''+crotsTotalHoursRounded).padStart(5, ' ')}h (${
+      `${crotsData[i].date} ${('' + crotsTotalHoursRounded).padStart(5, ' ')}h (${
         printableBalance?.toString().padStart(4, ' ')
       }m) ${crotsData[i].description}`,
     );

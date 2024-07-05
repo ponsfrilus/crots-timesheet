@@ -1,38 +1,39 @@
 # This file is the Test file for the TS project
 
-
 #
 # WORKING ENTRIES
 #
 
 # Simple lines
-2024-01-01 08:30 60 17:30 break_mode_1
-2024-01-06 08:30 12:05 13:00 17:30 break_mode_2
+2024-01-01 08:30 60 17:30
+2024-01-02 08:30 60 17:30 break_mode_1
+2024-01-03 08:30 12:05 13:00 17:30 break_mode_2
 
-2024-02-02 08:30 60 17:40 70 Got an extra of 70 minutes
-2024-02-03 08:30 60 19:00 No extra
-2024-03-04 10:00 60 19:00   No extra but spaces  
-2024-03-05 10:00 60 19:00 55     Extra and Extra spaces
-2023-11-14 13:00 0 19:00 No pause
+2024-02-01 08:30 60 17:40 70 Got an extra of 70 minutes
+2024-02-02 08:30 60 19:00 No extra
+2024-02-03 10:00 60 19:00   No extra but spaces  
+2024-02-04 10:00 60 19:00 55     Extra and Extra spaces
+2024-02-05 13:00 0 19:00 No pause
 
 # Normal lines
-2023-06-14 07:00 75 19:00 [Télétravail] have a "tag"
-2023-06-14 08:00 60 18:00 [EPFL]🚴 have a "tag" and an emoji
-2023-10-14 08:00 60 18:00 [EPFL]🚌 have a "tag" and an emoji
-2023-11-14 09:00 45 19:00 [Vacances]
-2023-11-14 09:00 45 19:00 [Maladie]
-2023-11-14 09:00 45 19:00 [EPFL] done this (240), done that (120).
+2024-03-01 07:00 75 19:00 [Télétravail] have a "tag"
+2024-03-02 08:00 60 18:00 [EPFL]🚴 have a "tag" and an emoji
+2024-03-03 08:00 60 18:00 [EPFL]🚌 have a "tag" and an emoji
+2024-03-04 09:00 45 19:00 [Vacances]
+2024-03-05 09:00 45 19:00 [Maladie]
+2024-03-06 09:00 45 19:00 [EPFL] done this (240), done that (120).
 
 # Complexes lines
-2023-07-03 09:00 60 19:00 [EPFL,vacances]🚌 done this (240), done that (120).
-
+2024-04-01 09:00 60 19:00 [EPFL,vacances]🚌 done this (240), done that (120).
+2024-04-02 08:30 60 17:30 Two line with the same date ?
+2024-04-02 08:30 60 17:30 Two line with the same date ?
 
 # 
 # Might fail
 #
 
 # Simplest line with tabs should fail
-2024-12-02	08:30	60	17:30		Line with tabs should fail
+2024-05-01	08:30	60	17:30		Line with tabs should fail
 
 #
 # FAILING ENTRIES
@@ -49,10 +50,10 @@ a weird line should fail
 2024-13-01 08:30 60 17:30 should fail (no 13rd month)
 
 # Typos
-2024-02-02 08:30 60 17:40 7o Extra use a o instead of a 0
-2024-03-03 08:30 60 17;40 Semicolon instead of a colon
-2024-03-03 08:88 60 19:00 start_time invalid (88 minutes)
-2024-03-03 08:08 60 19:88 end_time invalid (88 minutes)
-2024-03-03 08:08 -0 19:88 invalid break
-2024-03-03 08:08 12:88 13:00 19:00 break_start invalid (88 minutes)
-2024-03-03 08:08 12:00 13:99 19:00 break_end invalid (99 minutes)
+2024-12-01 08:30 60 17:40 7o Extra use a o instead of a 0
+2024-12-02 08:30 60 17;40 Semicolon instead of a colon
+2024-12-03 08:88 60 19:00 start_time invalid (88 minutes)
+2024-12-04 08:08 60 19:88 end_time invalid (88 minutes)
+2024-12-05 08:08 -0 19:88 invalid break
+2024-12-06 08:08 12:88 13:00 19:00 break_start invalid (88 minutes)
+2024-12-07 08:08 12:00 13:99 19:00 break_end invalid (99 minutes)

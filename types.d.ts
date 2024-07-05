@@ -26,11 +26,21 @@ interface entry {
   description?: string;
   description_parsed?: descriptionParsed;
   total: number | null;
-  balance?: number | null;
+  balance: number;
 }
 
 interface descriptionParsed {
-  tags?: Array<string>;
-  emojis?: Array<string>;
+  tags?: string[];
+  emojis?: string[];
   descs?: string[];
+}
+
+interface week {
+  total_minutes: number;
+  total_hours: number;
+}
+
+interface month {
+  total_minutes: number;
+  total_hours: number;
 }

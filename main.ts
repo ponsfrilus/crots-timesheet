@@ -158,6 +158,9 @@ async function main(): Promise<void> {
 
   if (args.debug) {
     console.debug(data);
+  }
+
+  if (args.debug || args['save-json']) {
     await writeJson('tmp.crots', data);
   }
 
