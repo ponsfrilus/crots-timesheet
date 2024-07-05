@@ -44,14 +44,14 @@ Option B: `ISO DATE` | `HOUR START` | `HOUR END` | `HOUR START` | `HOUR END` |
 
 ### Configuration
 
-- [ ] `crots config-init` create the default configuration
+- [ ] `crots --init` create the default configuration
+- [ ] `crots --config` display the active configuration
 - [ ] `crots --week_hours 42` to configure how many hours you have to officially
-      work each week
+      work each week. Use `--save` to store this in the settings.
 - [ ] `crots --input_file tests/test.db` path to the file where you enter your
-      daily entries
+      daily entries. Use `--save` to store this in the settings.
 - [ ] `crots --tag holidays vacances,holidays,off` set the keywords used for the
       holidays tags
-- [ ] `crots config list` display the active configuration
 
 ### Testing
 

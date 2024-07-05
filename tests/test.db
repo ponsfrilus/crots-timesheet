@@ -5,21 +5,27 @@
 # WORKING ENTRIES
 #
 
-# Simplest line (no coms)
-2024-01-01 08:30 60 17:30 description
-2024-01-06 08:30 12:05 13:00 17:30 description
+# Simple lines
+2024-01-01 08:30 60 17:30 break_mode_1
+2024-01-06 08:30 12:05 13:00 17:30 break_mode_2
 
 2024-02-02 08:30 60 17:40 70 Got an extra of 70 minutes
 2024-02-03 08:30 60 19:00 No extra
 2024-03-04 10:00 60 19:00   No extra but spaces  
 2024-03-05 10:00 60 19:00 55     Extra and Extra spaces
+2023-11-14 13:00 0 19:00 No pause
+
+# Normal lines
 2023-06-14 07:00 75 19:00 [Télétravail] have a "tag"
 2023-06-14 08:00 60 18:00 [EPFL]🚴 have a "tag" and an emoji
 2023-10-14 08:00 60 18:00 [EPFL]🚌 have a "tag" and an emoji
-2023-11-14 13:00 0 19:00 No pause
 2023-11-14 09:00 45 19:00 [Vacances]
 2023-11-14 09:00 45 19:00 [Maladie]
 2023-11-14 09:00 45 19:00 [EPFL] done this (240), done that (120).
+
+# Complexes lines
+2023-07-03 09:00 60 19:00 [EPFL,vacances]🚌 done this (240), done that (120).
+
 
 # 
 # Might fail

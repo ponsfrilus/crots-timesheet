@@ -18,6 +18,8 @@
   "compilerOptions": {
     "types": [
       "./types.d.ts"
-    ]
+    ],
+    "suppressImplicitAnyIndexErrors": true,
+    "ignoreDeprecations": "5.0"
   }
 }

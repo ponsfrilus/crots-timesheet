@@ -13,14 +13,23 @@ Deno.test('parseArguments should correctly parse CLI arguments', () => {
 
   assertEquals(args, {
     _: [],
+    c: false,
+    config: false,
     d: true,
     debug: true,
     h: true,
     help: true,
+    html: false,
+    report: false,
+    reverse: false,
+    s: false,
+    save: false,
+    summary: false,
     v: true,
     verbose: true,
     version: true,
     week_hours: 41,
+    wh: 41,
   });
 });
 
@@ -32,13 +41,22 @@ Deno.test('default CLI arguments should be defined', () => {
 
   assertEquals(args, {
     _: [],
+    c: false,
+    config: false,
     d: false,
     debug: false,
     h: false,
     help: false,
-    // input_file: settings.input_file,
+    html: false,
+    report: false,
+    reverse: false,
+    s: false,
+    save: false,
+    summary: false,
     v: false,
     verbose: false,
+    version: false,
     week_hours: 42,
+    wh: 42,
   });
 });
