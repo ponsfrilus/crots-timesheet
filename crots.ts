@@ -20,7 +20,8 @@ export const parseDescription = (desc: string) => {
 
   const regexEmojis =
     /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/;
-  const regexTags = /^\[((?:[a-zA-Z0-9 ]+,)*[a-zA-Z0-9 ]+)\]/;
+  // const regexTags = /^\[((?:[a-zA-Z0-9 ]+,)*[a-zA-Z0-9 ]+)\]/;
+  const regexTags = /^\[(.*)\].*/;
 
   desc = original_desc.trim();
 
@@ -34,12 +35,12 @@ export const parseDescription = (desc: string) => {
   let emojis;
   const emojisContent = desc.match(regexEmojis);
   if (emojisContent) {
-    emojis = emojisContent[1].split(',').map((t) => t.trim());
+    emojis = emojisContent[1];
   }
   // console.log(emojis);
 
   desc = desc.replace(regexEmojis, '');
-  desc = desc.replace(regexTags, '');
+  desc = desc.replace(/^\[(.*)\]/, '');
   const descs = desc.split(',').map((t) => t.trim());
   // TODO: parse time (120)
   return { tags, emojis, descs };
@@ -177,7 +178,10 @@ export const parseLine = (line: string, settings: Settings, debug: boolean): ent
   }
 };
 
-export function summarize(crotsData: Array<entry>, _args: object) {
+export function summarize(
+  crotsData: Array<entry>,
+  args: { report: boolean; summary: boolean; date: string; debug?: boolean; html?: boolean },
+) {
   const sums: month[][] = [];
   const sumsByWeek: week[][] = [];
   let yearTotal = 0;
@@ -189,18 +193,10 @@ export function summarize(crotsData: Array<entry>, _args: object) {
     const weekNumber = dt.weekNumber;
 
     sums[year] ??= [];
-    // if (!sums[year].length) {
-    //   console.log(`\n# ${year}`);
-    // }
     sums[year][month] ??= { total_minutes: 0, total_hours: 0 };
-    // if (sums[year][month].total_minutes === 0 && sums[year][month].total_hours === 0) {
-    //   console.log(`\n## ${year}-${month}`);
-    // }
+
     sumsByWeek[year] ??= [];
     sumsByWeek[year][weekNumber] ??= { total_minutes: 0, total_hours: 0 };
-    // if (sumsByWeek[year][weekNumber].total_minutes === 0 && sumsByWeek[year][weekNumber].total_hours === 0) {
-    //   console.log(`\n### Week #${weekNumber}`);
-    // }
 
     yearTotal += crotsData[i].balance ?? 0;
 
@@ -210,23 +206,64 @@ export function summarize(crotsData: Array<entry>, _args: object) {
     sumsByWeek[year][weekNumber]['total_minutes'] += crotsData[i].balance;
     sumsByWeek[year][weekNumber]['total_hours'] = sumsByWeek[year][weekNumber]['total_minutes'] / 60;
 
-    const printableBalance = ((crotsData[i].balance ?? 0) < 0) ? crotsData[i].balance : '+' + crotsData[i].balance;
+    //const printableBalance = ((crotsData[i].balance ?? 0) < 0) ? crotsData[i].balance : '+' + crotsData[i].balance;
+    //const crotsTotal = crotsData[i].total ?? 0;
+    //const crotsTotalHours = crotsTotal / 60;
+    //const crotsTotalHoursRounded = roundFloatNumber(crotsTotalHours);
 
-    const crotsTotal = crotsData[i].total ?? 0;
-    const crotsTotalHours = crotsTotal / 60;
-    const crotsTotalHoursRounded = roundFloatNumber(crotsTotalHours);
-
-    console.log(
-      `${crotsData[i].date} ${('' + crotsTotalHoursRounded).padStart(5, ' ')}h (${
-        printableBalance?.toString().padStart(4, ' ')
-      }m) ${crotsData[i].description}`,
-    );
     // console.log(
-    //   `${crotsData[i].date} ${parseFloat(crotsData[i].total / 60).toFixed(2).padStart(5, ' ')}h (${
-    //     printableBalance.toString().padStart(4, ' ')
+    //   `${crotsData[i].date} ${('' + crotsTotalHoursRounded).padStart(5, ' ')}h (${
+    //     printableBalance?.toString().padStart(4, ' ')
     //   }m) ${crotsData[i].description}`,
     // );
   }
-  console.table(sums[2024]);
-  console.table(sumsByWeek);
+  if (args.report) {
+    if (args.html) {
+      console.log('WIP');
+    }
+    let prevYear, prevMonth, prevWeekNumber;
+    for (let i = 0; i < crotsData.length; i++) {
+      const dt = DateTime.fromISO(crotsData[i].date);
+      const year = dt.year;
+      const month = dt.monthLong;
+      const weekNumber = dt.weekNumber;
+
+      if (prevYear !== year) {
+        prevYear = year;
+        console.log(`\n\n# ${year}`);
+      }
+      if (prevMonth !== month) {
+        prevMonth = month;
+        console.log('\n##\x1b[1m%s\x1b[0m', ` ${month}`);
+      }
+      if (prevWeekNumber !== weekNumber) {
+        prevWeekNumber = weekNumber;
+        console.log('\n### \x1b[4m%s\x1b[0m ', `week ${weekNumber}`);
+      }
+      const printableBalance = ((crotsData[i].balance ?? 0) < 0) ? crotsData[i].balance : '+' + crotsData[i].balance;
+      const crotsTotal = crotsData[i].total ?? 0;
+      const crotsTotalHours = crotsTotal / 60;
+      const crotsTotalHoursRounded = roundFloatNumber(crotsTotalHours);
+      console.log(
+        `↳ ${crotsData[i].date} ${
+          new Date(crotsData[i].date).toLocaleString('en-us', { weekday: 'long' }).padStart(9, ' ')
+        } ${('' + crotsTotalHoursRounded).padStart(5, ' ')}h  (${printableBalance?.toString().padStart(4, ' ')}m) ${
+          crotsData[i]?.description_parsed?.tags ? crotsData[i].description_parsed?.tags : ''
+        } ${crotsData[i].description_parsed?.emojis ? crotsData[i].description_parsed?.emojis : ''}`,
+      );
+      if (crotsData[i]?.description_parsed?.descs) {
+        console.log('\t• ' + crotsData[i]?.description_parsed?.descs?.join('\n\t• '));
+      }
+      // console.log(crotsData[i])
+    }
+  }
+
+  if (args.debug) {
+    const now = DateTime.fromISO();
+
+    console.log(sumsByWeek);
+    console.log(sumsByWeek[now.getFullYear()]);
+    console.log(sums);
+    console.log(sums[now.getFullYear()]);
+  }
 }

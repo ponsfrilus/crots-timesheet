@@ -31,7 +31,7 @@ interface entry {
 
 interface descriptionParsed {
   tags?: string[];
-  emojis?: string[];
+  emojis?: string;
   descs?: string[];
 }
 

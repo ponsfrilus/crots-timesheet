@@ -5,9 +5,9 @@
 #
 
 # Simple lines
-2024-01-01 08:30 60 17:30
-2024-01-02 08:30 60 17:30 break_mode_1
-2024-01-03 08:30 12:05 13:00 17:30 break_mode_2
+2024-01-01 08:00 60 17:12
+2024-01-02 08:00 60 17:12 break_mode_1
+2024-01-03 08:00 12:05 13:00 17:12 break_mode_2
 
 2024-02-01 08:30 60 17:40 70 Got an extra of 70 minutes
 2024-02-02 08:30 60 19:00 No extra
@@ -21,12 +21,13 @@
 2024-03-03 08:00 60 18:00 [EPFL]🚌 have a "tag" and an emoji
 2024-03-04 09:00 45 19:00 [Vacances]
 2024-03-05 09:00 45 19:00 [Maladie]
-2024-03-06 09:00 45 19:00 [EPFL] done this (240), done that (120).
+2024-03-06 09:00 45 19:00 [EPFL] done this (240), done that (120)
 
 # Complexes lines
-2024-04-01 09:00 60 19:00 [EPFL,vacances]🚌 done this (240), done that (120).
-2024-04-02 08:30 60 17:30 Two line with the same date ?
-2024-04-02 08:30 60 17:30 Two line with the same date ?
+2024-04-01 09:00 60 19:00 [EPFL,vacances]🚌 done this (240), done that (120), achieved that (60)
+2024-04-02 08:30 60 17:30 Two lines with the same date ?
+2024-04-02 08:30 60 17:30 Two lines with the same date ?
+2024-04-02 08:30 60 17:30 🚌🚌🚌 3 emojis
 
 # 
 # Might fail

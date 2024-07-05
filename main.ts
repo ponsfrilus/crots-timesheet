@@ -1,10 +1,9 @@
-import settings from './settings.json' with { type: 'json' };
 import deno from './deno.json' with { type: 'json' };
 // https://jsr.io/@std/cli/doc/parse-args/~/parseArgs
 import { parseArgs } from '@std/cli/parse-args';
 import { type Args } from 'https://deno.land/std@0.200.0/flags/mod.ts';
 import { readLines } from '@std/io/read-lines';
-import { isEmpty, isNumeric, writeJson } from './tools.ts';
+import { isEmpty, writeJson } from './tools.ts';
 import { parseLine, summarize } from './crots.ts';
 import { initSettings } from './settings.ts';
 const settingsDirectory = `${Deno.env.get('HOME')}/.crots/`;
@@ -103,7 +102,8 @@ async function main(): Promise<void> {
     console.log('input_file is different than the settings');
     runSettings.input_file = args.input_file;
   }
-  if (runSettings.week_hours != args.week_hours && isNumeric(args.week_hours)) {
+  console.log(args.week_hours);
+  if (runSettings.week_hours != args.week_hours && args.week_hours != undefined) {
     console.log('week_hours is different than the settings');
     runSettings.week_hours = args.week_hours;
   }
@@ -144,7 +144,7 @@ async function main(): Promise<void> {
   const content = await Deno.open(runSettings.input_file);
   const data = [];
   for await (const l of readLines(content)) {
-    const parsedLine = parseLine(l, settings, args.debug);
+    const parsedLine = parseLine(l, runSettings, args.debug);
     if (parsedLine) {
       data.push(parsedLine);
     }
@@ -165,8 +165,8 @@ async function main(): Promise<void> {
   }
 
   if (args.report || args.summary) {
-    console.log('report');
-    summarize(data, { report: args.report, summary: args.summary });
+    // console.log('report');
+    summarize(data, { report: args.report, summary: args.summary, date: args.date });
   }
 }
 
