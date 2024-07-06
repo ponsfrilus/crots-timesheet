@@ -29,12 +29,12 @@ function printHelp(): void {
   console.log('  -v, --verbose        Verbose mode');
   console.log('');
   console.log('  -s, --save           Save settings for future use');
-  console.log('  -wh, --week_hours    Set the week hours');
+  console.log('  -w, --week_hours     Set the week hours');
   console.log('  -f, --file           Set the input file');
-  console.log('  \x1b[3m%s\x1b[0m', 'ⓘ  Exemple: crots -wh 42 --file ./db.crots --save');
+  console.log('  \x1b[3m%s\x1b[0m', 'ⓘ  Exemple: crots -w 42 --file ./db.crots --save');
   console.log('');
   console.log('  -e, --edit           Open the crots db');
-  console.log('  -gh, --github        Open the crots GitHub repository');
+  console.log('  -g, --github         Open the crots GitHub repository');
   console.log('');
   console.log('  --date               Specify a year or a month');
   console.log('  \x1b[3m%s\x1b[0m', 'ⓘ  Exemple: crots --date=2024-06 --report');
@@ -72,10 +72,10 @@ export function parseArguments(args: string[]): Args {
     'debug': 'd',
     'edit': 'e',
     'file': 'f',
-    'github': 'gh',
+    'github': 'g',
     'save': 's',
     'verbose': 'v',
-    'week_hours': 'wh',
+    'week_hours': 'w',
   };
 
   // Set the defaults

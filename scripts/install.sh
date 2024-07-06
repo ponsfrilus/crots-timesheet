@@ -47,7 +47,6 @@ else
 	echo "Manually add the directory to your \$HOME/$shell_profile (or similar)"
 	echo "  export CROTS_INSTALL=\"$crots_install\""
 	echo "  export PATH=\"\$CROTS_INSTALL/bin:\$PATH\""
-	echo "Run '$exe --help' to get started"
+	echo "\nRun '$exe --help' to get started"
 fi
-echo
-echo "Stuck? https://github.com/ponsfrilus/crots-timesheet"
+echo "Still stuck? Please visit https://github.com/ponsfrilus/crots-timesheet (run crots -g)"
