@@ -1,4 +1,5 @@
 import { isNumeric, roundFloatNumber } from './tools.ts';
+import AsciiTable from 'https://deno.land/x/ascii_table/mod.ts';
 
 export function weekData(settings: crotsSettings): weekData {
   // const wh = Duration.fromObject({ hours: settings.week_hours })
@@ -182,7 +183,7 @@ export function summarize(
   crotsData: Array<entry>,
   args: { report: boolean; summary: boolean; date: string; debug?: boolean; html?: boolean },
 ) {
-  const sums: month[][] = [];
+  const sums: YearData = {};
   const sumsByWeek: week[][] = [];
   let yearTotal = 0;
   for (let i = 0; i < crotsData.length; i++) {
@@ -192,7 +193,7 @@ export function summarize(
     const month = dt.monthLong;
     const weekNumber = dt.weekNumber;
 
-    sums[year] ??= [];
+    sums[year] ??= {};
     sums[year][month] ??= { total_minutes: 0, total_hours: 0 };
 
     sumsByWeek[year] ??= [];
@@ -217,10 +218,10 @@ export function summarize(
     //   }m) ${crotsData[i].description}`,
     // );
   }
+  if (args.html) {
+    console.log('WIP');
+  }
   if (args.report) {
-    if (args.html) {
-      console.log('WIP');
-    }
     let prevYear, prevMonth, prevWeekNumber;
     for (let i = 0; i < crotsData.length; i++) {
       const dt = DateTime.fromISO(crotsData[i].date);
@@ -260,12 +261,31 @@ export function summarize(
     }
   }
 
-  if (args.debug) {
-    const now = DateTime.fromISO();
+  const year = new Date().toISOString().split('-')[0];
+  //const month = new Date().toISOString().split('-')[1];
+  if (args.summary) {
+    console.log();
+    const summaryTable = new AsciiTable(`       \x1b[1mSummary ${year}\x1b[0m`);
+    summaryTable.setHeading('month', 'overtime (minutes)', 'overtime (hours)');
+    let summaryTotalHours = 0;
+    let summaryTotalMinutes = 0;
+    for (const m in sums[2024]) {
+      summaryTotalHours += sums[2024][m]['total_hours'];
+      summaryTotalMinutes += sums[2024][m]['total_minutes'];
+      summaryTable.addRow(m, sums[2024][m]['total_minutes'], roundFloatNumber(sums[2024][m]['total_hours']));
+    }
+    summaryTable.addRow('=========', '==================', '================');
+    summaryTable.addRow('Total', roundFloatNumber(summaryTotalMinutes), roundFloatNumber(summaryTotalHours));
 
-    console.log(sumsByWeek);
-    console.log(sumsByWeek[now.getFullYear()]);
-    console.log(sums);
-    console.log(sums[now.getFullYear()]);
+    // TODO: make this an option
+    summaryTable.removeBorder();
+    console.log(summaryTable.toString());
+  }
+
+  if (args.debug) {
+    // console.log(sumsByWeek);
+    // console.log(sumsByWeek[year]);
+    console.table(sums[2024]);
+    // console.log(sums[year]);
   }
 }

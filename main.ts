@@ -227,9 +227,15 @@ ${
     await writeJSON('tmp.crots', data);
   }
 
-  if (args.report || args.summary) {
+  if (args.report || args.html || args.summary) {
     // console.log('report');
-    summarize(data, { report: args.report, summary: args.summary, date: args.date });
+    summarize(data, {
+      report: args.report,
+      summary: args.summary,
+      date: args.date,
+      html: args.html,
+      debug: args.debug,
+    });
   }
 }
 

@@ -17,6 +17,8 @@ Deno.test('parseArguments should correctly parse CLI arguments', () => {
     config: false,
     d: true,
     debug: true,
+    e: false,
+    edit: false,
     h: true,
     help: true,
     html: false,
@@ -29,7 +31,7 @@ Deno.test('parseArguments should correctly parse CLI arguments', () => {
     verbose: true,
     version: true,
     week_hours: 41,
-    wh: 41,
+    w: 41,
   });
 });
 
@@ -45,6 +47,8 @@ Deno.test('default CLI arguments should be defined', () => {
     config: false,
     d: false,
     debug: false,
+    e: false,
+    edit: false,
     h: false,
     help: false,
     html: false,
@@ -57,6 +61,6 @@ Deno.test('default CLI arguments should be defined', () => {
     verbose: false,
     version: false,
     week_hours: 42,
-    wh: 42,
+    w: 42,
   });
 });

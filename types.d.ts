@@ -36,7 +36,18 @@ interface week {
   total_hours: number;
 }
 
-interface month {
+// Monthly data
+type MonthlyData = {
   total_minutes: number;
   total_hours: number;
-}
+};
+
+// Month's type
+type Months = {
+  [month: string]: MonthlyData;
+};
+
+// Year's type
+type YearData = {
+  [year: string]: Months;
+};
