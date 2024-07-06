@@ -16,7 +16,7 @@ run:
 test:
 	deno test --allow-read --allow-env --allow-write -- --input_file=tests/test.db
 
-crots: crots
+crots:
 	deno compile \
 	--allow-read=~/.crots \
 	--allow-env \

@@ -1,0 +1,70 @@
+name: Deploy
+on:
+  push:
+    branches: main
+  pull_request:
+    branches: main
+  workflow_dispatch:
+    # Allows you to run this workflow manually from the Actions tab
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write # Needed for auth with Deno Deploy
+      contents: read # Needed to clone the repository
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: Install Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.44
+
+      # Get the version from deno.json and export it to 
+      # CROTS_VERSION environment variable
+      - name: Export CROTS_VERSION
+        shell: bash
+        run: |
+          echo "CROTS_VERSION=$(cat deno.json | grep version | cut -d'"' -f4)" >> $GITHUB_ENV
+          echo "CROTS_VERSION=${{ env.CROTS_VERSION }}"
+
+      - name: debug
+        run: "deno --version"
+
+      - name: debug
+        run: "deno --help"
+
+      - name: debug
+        run: "deno compile --help"
+
+      - name: Build step
+        run: "make crots"
+
+      # - name: Upload to Deno Deploy
+      #   uses: denoland/deployctl@v1
+      #   with:
+      #     project: "<your-project-name>"
+      #     entrypoint: "main.ts"
+      #     root: "."
+
+      # Create Release
+      # https://stackoverflow.com/a/75679739/960623
+      # Note: this will fail if the tags already exists
+      # Note: if HTTP 403: Resource not accessible by integration
+      #       go to https://github.com/OWNER/REPO/settings/actions
+      #       and give actions Read and Write permissions.
+      - name: Create release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          tag: v${{ env.CROTS_VERSION }}
+        run: |
+          gh release create "$tag" ./build/* \
+            --target="next" \
+            --repo="$GITHUB_REPOSITORY" \
+            --title="${GITHUB_REPOSITORY#*/} ${tag#v}" \
+            --generate-notes
