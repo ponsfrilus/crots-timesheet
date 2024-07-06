@@ -16,11 +16,11 @@ run:
 test:
 	deno test --allow-read --allow-env --allow-write -- --input_file=tests/test.db
 
-crots: crots
+crots:
 	deno compile \
-	--allow-read=~/.crots \
+	--allow-read \
 	--allow-env \
-	--allow-write=~/.crots \
+	--allow-write \
 	--target=x86_64-unknown-linux-gnu \
 	--output ./build/crots_x86_64-linux main.ts;
 	deno compile \
