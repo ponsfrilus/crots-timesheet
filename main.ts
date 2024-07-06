@@ -12,11 +12,11 @@ const settingsFilePath = `${settingsDirectory}settings.json`;
 // import { Table } from 'easy-table'
 
 type Settings = {
-  'input_file': string;
+  'file': string;
   'week_hours': number;
 };
 const defaultsSettings: Settings = {
-  'input_file': './tests/test.db',
+  'file': '',
   'week_hours': 42,
 };
 
@@ -34,8 +34,8 @@ function printHelp(): void {
   console.log('');
   console.log('  -s, --save           Save settings for future use');
   console.log('  -wh, --week_hours    Set the week hours');
-  console.log('  -i, --input_file     Set the input file');
-  console.log('  \x1b[3m%s\x1b[0m', 'ⓘ  Exemple: crots -wh 42 --input_file ./db.crots --save');
+  console.log('  -f, --file           Set the input file');
+  console.log('  \x1b[3m%s\x1b[0m', 'ⓘ  Exemple: crots -wh 42 --file ./db.crots --save');
   console.log('');
   console.log('  -e, --edit           Open the crots db');
   console.log('  -gh, --github        Open the crots GitHub repository');
@@ -55,6 +55,7 @@ export function parseArguments(args: string[]): Args {
   const booleanArgs = [
     'config',
     'debug',
+    'edit',
     'help',
     'html',
     'report',
@@ -73,6 +74,9 @@ export function parseArguments(args: string[]): Args {
     'help': 'h',
     'config': 'c',
     'debug': 'd',
+    'edit': 'e',
+    'file': 'f',
+    'github': 'gh',
     'save': 's',
     'verbose': 'v',
     'week_hours': 'wh',
@@ -95,25 +99,14 @@ export function parseArguments(args: string[]): Args {
  * Main logic of CLI.
  */
 async function main(): Promise<void> {
-  await initSettings(settingsDirectory, settingsFilePath, defaultsSettings);
+
+  const settingsFileCreated = await initSettings(settingsDirectory, settingsFilePath, defaultsSettings);
 
   const runSettings = JSON.parse(
     Deno.readTextFileSync(`${Deno.env.get('HOME')}/.crots/settings.json`),
   );
 
   const args = parseArguments(Deno.args);
-  if (runSettings.input_file != args.input_file && !isEmpty(args.input_file)) {
-    console.log('input_file is different than the settings');
-    runSettings.input_file = args.input_file;
-  }
-  console.log(args.week_hours);
-  if (runSettings.week_hours != args.week_hours && args.week_hours != undefined) {
-    console.log('week_hours is different than the settings');
-    runSettings.week_hours = args.week_hours;
-  }
-  if (args.save) {
-    await writeJson(settingsFilePath, runSettings);
-  }
 
   // If help flag enabled, print help.
   if (args.help) {
@@ -134,12 +127,67 @@ async function main(): Promise<void> {
     Deno.exit(0);
   }
 
+  if (runSettings.file != args.file && !isEmpty(args.file)) {
+    console.log('file is different than the settings');
+    // Note: this does not work with ~/.crots/something
+    const fileRealPath = await Deno.realPath(args.file);
+    runSettings.file = fileRealPath;
+  }
+
+  if (runSettings.week_hours != args.week_hours && args.week_hours != undefined) {
+    console.log('week_hours is different than the settings');
+    runSettings.week_hours = args.week_hours;
+  }
+  if (args.save) {
+    await writeSettings(settingsFilePath, runSettings);
+  }
+
+  // TODO: OR if there is no file to the runSettings.file PATH
+  if (isEmpty(runSettings.file)) {
+    const createCrotsFile = confirm("Crots file not found. Create a default file?");
+    if (createCrotsFile) {
+      const crotsFilePath = prompt("Crots file path:", `${Deno.env.get('HOME')}/.crots/my-timesheet.crots`);
+      const fileContent = `#
+# Default time sheet file for crots v${deno.version}
+#
+# An entry can be either
+#   ${new Date().toISOString().split('T')[0]} 08:00 60 17:00 [WFH]ℹ️  A default entry with lunch break in minutes
+# or
+#   ${new Date().toISOString().split('T')[0]} 08:00 12:00 13:00 17:00 [Office]ℹ️  A default entry with end and start hours
+# 
+# Additional documentation is available on
+#   https://github.com/ponsfrilus/crots-timesheet
+#
+
+${new Date().toISOString().split('T')[0]} 08:00 12:00 13:00 17:24 [example]ℹ️  A task for this day (1h), another task (2h)
+`
+      try {
+        await Deno.lstat(crotsFilePath);
+        console.log(`\nCrots file ${crotsFilePath} already exists!\n`);
+      } catch (err) {
+        if (!(err instanceof Deno.errors.NotFound)) {
+          throw err;
+        }
+        try {
+          Deno.writeTextFileSync(crotsFilePath, fileContent);
+        } catch (err) {
+          console.error(err);
+          throw err;
+        }
+      }
+      const fileRealPath = await Deno.realPath(crotsFilePath);
+      runSettings.file = crotsFilePath;
+      await writeSettings(settingsFilePath, runSettings);
+    }
+    console.log("Please run crots again.")
+    Deno.exit(0);
+  }
   // If version config enabled, print it.
   if (args.config) {
     for (const key of ['debug', 'verbose']) {
       console.log(`${key}: ${args[key]}`);
     }
-    console.log('input_file:', runSettings.input_file);
+    console.log('file:', runSettings.file);
     console.log('week_hours:', runSettings.week_hours);
     Deno.exit(0);
   }
@@ -156,7 +204,7 @@ async function main(): Promise<void> {
   }
 
   // Parsing the file
-  const content = await Deno.open(runSettings.input_file);
+  const content = await Deno.open(runSettings.file);
   const data = [];
   for await (const l of readLines(content)) {
     const parsedLine = parseLine(l, runSettings, args.debug);
