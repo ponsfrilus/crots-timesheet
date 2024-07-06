@@ -35,6 +35,7 @@
 
 # Simplest line with tabs should fail
 2024-05-01	08:30	60	17:30		Line with tabs should fail
+2024-05-02 8:00 12:05 13:00 17:12 one digit hour
 
 #
 # FAILING ENTRIES
