@@ -1,7 +1,11 @@
 import { ensureDir } from 'https://deno.land/std@0.224.0/fs/ensure_dir.ts';
 import { writeSettings } from './tools.ts';
 
-export async function initSettings(settingsDirectory: string, settingsFilePath: string, defaultsSettings: Settings) {
+export async function initSettings(
+  settingsDirectory: string,
+  settingsFilePath: string,
+  defaultsSettings: crotsSettings,
+) {
   // Check if the settingsFile exists
   try {
     await Deno.lstat(settingsFilePath);

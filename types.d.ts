@@ -1,9 +1,5 @@
-// type Settings = {
-//   'input_file': string;
-//   'week_hours': number;
-// };
-interface Settings {
-  input_file: string;
+interface crotsSettings {
+  file: string;
   week_hours: number;
 }
 

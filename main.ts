@@ -11,11 +11,7 @@ const settingsDirectory = `${Deno.env.get('HOME')}/.crots/`;
 const settingsFilePath = `${settingsDirectory}settings.json`;
 // import { Table } from 'easy-table'
 
-type Settings = {
-  'file': string;
-  'week_hours': number;
-};
-const defaultsSettings: Settings = {
+const defaultsSettings: crotsSettings = {
   'file': '',
   'week_hours': 42,
 };
@@ -99,8 +95,7 @@ export function parseArguments(args: string[]): Args {
  * Main logic of CLI.
  */
 async function main(): Promise<void> {
-
-  const settingsFileCreated = await initSettings(settingsDirectory, settingsFilePath, defaultsSettings);
+  await initSettings(settingsDirectory, settingsFilePath, defaultsSettings);
 
   const runSettings = JSON.parse(
     Deno.readTextFileSync(`${Deno.env.get('HOME')}/.crots/settings.json`),
@@ -144,23 +139,28 @@ async function main(): Promise<void> {
 
   // TODO: OR if there is no file to the runSettings.file PATH
   if (isEmpty(runSettings.file)) {
-    const createCrotsFile = confirm("Crots file not found. Create a default file?");
+    const createCrotsFile: boolean = confirm('Crots file not found. Create a default file?');
     if (createCrotsFile) {
-      const crotsFilePath = prompt("Crots file path:", `${Deno.env.get('HOME')}/.crots/my-timesheet.crots`);
-      const fileContent = `#
+      const crotsFilePath: string = prompt('Crots file path:', `${Deno.env.get('HOME')}/.crots/my-timesheet.crots`) ??
+        '';
+      const fileContent: string = `#
 # Default time sheet file for crots v${deno.version}
 #
 # An entry can be either
 #   ${new Date().toISOString().split('T')[0]} 08:00 60 17:00 [WFH]ℹ️  A default entry with lunch break in minutes
 # or
-#   ${new Date().toISOString().split('T')[0]} 08:00 12:00 13:00 17:00 [Office]ℹ️  A default entry with end and start hours
+#   ${
+        new Date().toISOString().split('T')[0]
+      } 08:00 12:00 13:00 17:00 [Office]ℹ️  A default entry with end and start hours
 # 
 # Additional documentation is available on
 #   https://github.com/ponsfrilus/crots-timesheet
 #
 
-${new Date().toISOString().split('T')[0]} 08:00 12:00 13:00 17:24 [example]ℹ️  A task for this day (1h), another task (2h)
-`
+${
+        new Date().toISOString().split('T')[0]
+      } 08:00 12:00 13:00 17:24 [example]ℹ️  A task for this day (1h), another task (2h)
+`;
       try {
         await Deno.lstat(crotsFilePath);
         console.log(`\nCrots file ${crotsFilePath} already exists!\n`);
@@ -176,10 +176,10 @@ ${new Date().toISOString().split('T')[0]} 08:00 12:00 13:00 17:24 [example]ℹ�
         }
       }
       const fileRealPath = await Deno.realPath(crotsFilePath);
-      runSettings.file = crotsFilePath;
+      runSettings.file = fileRealPath;
       await writeSettings(settingsFilePath, runSettings);
     }
-    console.log("Please run crots again.")
+    console.log('Please run crots again.');
     Deno.exit(0);
   }
   // If version config enabled, print it.

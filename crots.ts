@@ -1,6 +1,6 @@
 import { isNumeric, roundFloatNumber } from './tools.ts';
 
-export function weekData(settings: Settings): weekData {
+export function weekData(settings: crotsSettings): weekData {
   // const wh = Duration.fromObject({ hours: settings.week_hours })
   const dh = Duration.fromObject({ hours: settings.week_hours / 5 });
   return {
@@ -47,7 +47,7 @@ export const parseDescription = (desc: string) => {
 };
 
 import { DateTime, Duration, Interval } from 'npm:luxon'; // DateTime
-export const parseLine = (line: string, settings: Settings, debug: boolean): entry | undefined => {
+export const parseLine = (line: string, settings: crotsSettings, debug: boolean): entry | undefined => {
   const original_line = line;
   if (debug) console.debug(`\n‣ ${original_line}`);
   // Note: "^(\d{4}-\d{2}-\d{2})\s+(\d{2}:\d{2})\s+(?:(\d{2})|((\d{2}:\d{2})\s+(\d{2}:\d{2})))\s+(\d{2}:\d{2})\s+(\d+)?\s?(.*)"

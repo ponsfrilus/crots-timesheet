@@ -1,6 +1,6 @@
 {
   "title": "crots — CROnos Time Sheet ⌛",
-  "version": "1.1.0",
+  "version": "1.1.2",
   "imports": {
     "@std/cli": "jsr:@std/cli@^0.224.7",
     "@std/io": "jsr:@std/io@^0.224.3"
