@@ -3,7 +3,7 @@ import deno from './deno.json' with { type: 'json' };
 import { parseArgs } from '@std/cli/parse-args';
 import { type Args } from 'https://deno.land/std@0.200.0/flags/mod.ts';
 import { readLines } from '@std/io/read-lines';
-import { isEmpty, writeJson } from './tools.ts';
+import { isEmpty, writeJSON, writeSettings } from './tools.ts';
 import { parseLine, summarize } from './crots.ts';
 import { initSettings } from './settings.ts';
 const settingsDirectory = `${Deno.env.get('HOME')}/.crots/`;
@@ -161,7 +161,7 @@ async function main(): Promise<void> {
   }
 
   if (args.debug || args['save-json']) {
-    await writeJson('tmp.crots', data);
+    await writeJSON('tmp.crots', data);
   }
 
   if (args.report || args.summary) {

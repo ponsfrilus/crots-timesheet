@@ -1,17 +1,22 @@
 // https://docs.deno.com/runtime/tutorials/read_write_files
-export async function writeJson(path: string, data: object): Promise<string> {
+export async function writeJSON(path: string, data: object): Promise<string> {
   try {
     Deno.writeTextFileSync(path, JSON.stringify(data, null, 2));
-    const settings = await Deno.readTextFile(
-      `${Deno.env.get('HOME')}/.crots/settings.json`,
-    );
-    console.log('... written to ' + path);
-    return JSON.parse(settings);
+    const writtenFile = await Deno.readTextFile(path);
+    return JSON.parse(writtenFile);
   } catch (e) {
     return e.message;
   }
 }
-
+export async function writeSettings(path: string, data: object): Promise<string> {
+  try {
+    const settings = await writeJSON(path, data);
+    console.log('Settings written to ' + path);
+    return settings;
+  } catch (e) {
+    return e.message;
+  }
+}
 // https://deno.land/x/30_seconds_of_typescript@v1.0.1/docs/isEmpty.md
 // deno-lint-ignore no-explicit-any -- anything can be passed
 export const isEmpty = (val: any) => val == null || !(Object.keys(val) || val).length;
