@@ -247,9 +247,11 @@ export function summarize(
       console.log(
         `↳ ${crotsData[i].date} ${
           new Date(crotsData[i].date).toLocaleString('en-us', { weekday: 'long' }).padStart(9, ' ')
-        } ${('' + crotsTotalHoursRounded).padStart(5, ' ')}h  (${printableBalance?.toString().padStart(4, ' ')}m) ${
-          crotsData[i]?.description_parsed?.tags ? crotsData[i].description_parsed?.tags : ''
-        } ${crotsData[i].description_parsed?.emojis ? crotsData[i].description_parsed?.emojis : ''}`,
+        } ${('' + crotsTotalHoursRounded).padStart(5, ' ')}h  ${
+          (printableBalance == 0) ? '       ' : '(' + printableBalance?.toString().padStart(4, ' ') + 'm)'
+        } ${crotsData[i]?.description_parsed?.tags ? crotsData[i].description_parsed?.tags : ''} ${
+          crotsData[i].description_parsed?.emojis ? crotsData[i].description_parsed?.emojis : ''
+        }`,
       );
       if (crotsData[i]?.description_parsed?.descs) {
         console.log('\t• ' + crotsData[i]?.description_parsed?.descs?.join('\n\t• '));
