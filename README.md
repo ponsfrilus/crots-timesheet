@@ -22,7 +22,7 @@ tag. Any line starting with a `#` should be considered as a comment.
 
 Mac, Linux:
 ```sh
-curl -fsSL https://raw.githubusercontent.com/ponsfrilus/crots-timesheet/script/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/ponsfrilus/crots-timesheet/main/scripts/install.sh | sh
 ```
 
 The releases are here:
