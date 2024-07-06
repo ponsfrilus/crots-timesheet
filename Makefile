@@ -10,7 +10,7 @@ all: crots
 
 .PHONY: run
 run:
-	deno run --allow-read --allow-env --allow-write main.ts -d
+	deno run --allow-env --allow-read --allow-write --allow-run main.ts -d
 
 .PHONY: test
 test:
@@ -18,32 +18,37 @@ test:
 
 crots:
 	deno compile \
-	--allow-read \
 	--allow-env \
+	--allow-run \
+	--allow-read \
 	--allow-write \
 	--target=x86_64-unknown-linux-gnu \
 	--output ./build/crots_x86_64-linux main.ts;
 	deno compile \
-	--allow-read \
 	--allow-env \
+	--allow-run \
+	--allow-read \
 	--allow-write \
 	--target=aarch64-unknown-linux-gnu \
 	--output ./build/crots_aarch64-linux main.ts;
 	deno compile \
-	--allow-read \
 	--allow-env \
+	--allow-run \
+	--allow-read \
 	--allow-write \
 	--target=x86_64-pc-windows-msvc \
 	--output ./build/crots_x86_64-win main.ts;
 	deno compile \
-	--allow-read \
 	--allow-env \
+	--allow-run \
+	--allow-read \
 	--allow-write \
 	--target=x86_64-apple-darwin \
 	--output ./build/crots_x86_64-darwin main.ts;
 	deno compile \
-	--allow-read \
 	--allow-env \
+	--allow-run \
+	--allow-read \
 	--allow-write \
 	--target=aarch64-apple-darwin \
 	--output ./build/crots_aarch64-darwin main.ts;

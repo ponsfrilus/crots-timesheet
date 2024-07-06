@@ -1,4 +1,5 @@
 import deno from './deno.json' with { type: 'json' };
+import { open } from 'https://deno.land/x/open/index.ts';
 // https://jsr.io/@std/cli/doc/parse-args/~/parseArgs
 import { parseArgs } from '@std/cli/parse-args';
 import { type Args } from 'https://deno.land/std@0.200.0/flags/mod.ts';
@@ -35,6 +36,9 @@ function printHelp(): void {
   console.log('  -wh, --week_hours    Set the week hours');
   console.log('  -i, --input_file     Set the input file');
   console.log('  \x1b[3m%s\x1b[0m', 'ⓘ  Exemple: crots -wh 42 --input_file ./db.crots --save');
+  console.log('');
+  console.log('  -e, --edit           Open the crots db');
+  console.log('  -gh, --github        Open the crots GitHub repository');
   console.log('');
   console.log('  --date               Specify a year or a month');
   console.log('  \x1b[3m%s\x1b[0m', 'ⓘ  Exemple: crots --date=2024-06 --report');
@@ -137,6 +141,17 @@ async function main(): Promise<void> {
     }
     console.log('input_file:', runSettings.input_file);
     console.log('week_hours:', runSettings.week_hours);
+    Deno.exit(0);
+  }
+
+  // If edit flag enabled, open the crots file for edition
+  if (args.edit) {
+    await open(runSettings.file);
+    Deno.exit(0);
+  }
+  if (args.github) {
+    // Opens the crots GitHub repository in the default browser.
+    await open('https://github.com/ponsfrilus/crots-timesheet/');
     Deno.exit(0);
   }
 
